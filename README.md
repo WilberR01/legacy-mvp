@@ -40,7 +40,7 @@ Antes de começar, certifique-se de que você tem o seguinte instalado:
 Abra seu terminal ou prompt de comando, navegue até o diretório onde deseja salvar o projeto e execute o seguinte comando:
 
 ```bash
-git clone <URL DO PROJETO NO GITHUB
+git clone <URL DO PROJETO NO GITHUB>
 cd legacy-question-bank
 ```
 

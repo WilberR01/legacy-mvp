@@ -75,7 +75,7 @@ Abra seu navegador e acesse http://localhost:4200. A aplicação estará funcion
 
 ### Contribuir Passo 1: Criar uma Nova Branch
 
-Nunca faça commits diretamente na branch `main` ou `develop`. Para cada nova funcionalidade, correção de bug ou melhoria, crie uma nova branch a partir da branch principal de desenvolvimento (geralmente `develop`).
+Nunca faça commits diretamente na branch `master`. Para cada nova funcionalidade, correção de bug ou melhoria, crie uma nova branch a partir da branch principal de desenvolvimento.
 
 Use uma convenção de nomenclatura clara, como:
 
@@ -87,10 +87,10 @@ Use uma convenção de nomenclatura clara, como:
 
 ```bash
 # Certifique-se de estar na branch principal de desenvolvimento
-git checkout develop
+git checkout master
 
 # Puxe as últimas atualizações
-git pull origin develop
+git pull origin master
 
 # Crie sua nova branch
 git checkout -b feat/nome-da-sua-feature

@@ -1,0 +1,9 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+  padding: 20px 0;
+  box-sizing: border-box;
+}

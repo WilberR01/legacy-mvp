@@ -1,0 +1,43 @@
+.navbar-container {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  border-radius: 10px;
+  background-color: white;
+  max-width: 80%;
+  margin: 10px auto;
+}
+
+.navbar-button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-button {
+    background-color:aquamarine;
+}
+
+.logo-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+
+  .titulo {
+    margin-left: 10px;
+    color: black;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+  .logo {
+    width: 45px;
+    height: 45px;
+    float: left;
+  }
+}
+

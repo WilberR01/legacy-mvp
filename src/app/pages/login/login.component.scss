@@ -1,0 +1,73 @@
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+}
+
+.form-container {
+    width: 100%;
+    width: 500px;
+    padding: 20px;
+}
+
+mat-card-header {
+    padding-bottom: 20px;
+    justify-content: center;
+}
+
+mat-card-content,
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+button[mat-raised-button] {
+    width: 100%;
+    height: 45px;
+    margin-top: 10px;
+}
+
+mat-card-actions {
+    display: flex;
+    justify-content: center;
+    padding: 0 16px 8px;
+    margin-top: 15px;
+}
+
+mat-card-title {
+    text-align: center;
+    width: 100%;
+    font-size: 1.5rem;
+}
+
+.skeleton-title {
+    width: 40%;
+    height: 28px;
+    margin: 0 auto;
+    border-radius: 4px;
+}
+
+.skeleton-field {
+    width: 100%;
+    height: 56px;
+    margin-bottom: 20px;
+}
+.skeleton-button {
+    width: 100%;
+    height: 45px;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+.skeleton-text-button {
+    width: 60%;
+    height: 20px;
+    margin-top: 15px;
+    border-radius: 4px;
+}

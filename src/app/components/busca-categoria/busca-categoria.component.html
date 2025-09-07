@@ -1,0 +1,26 @@
+<div class="category-search-container">
+    <mat-form-field appearance="outline" class="category-input-field">
+        <mat-label>Categoria</mat-label>
+        <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto">
+
+        <button type="button" mat-icon-button matSuffix *ngIf="selectedCategory" (click)="unselectCategory()">
+            <mat-icon>close</mat-icon>
+        </button>
+
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectCategory($event.option.value)"
+            [displayWith]="displayCategory">
+            <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
+                {{ category.name }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <div class="action-buttons">
+        <button type="button" mat-icon-button color="primary" (click)="openCreateModal()" *ngIf="!selectedCategory">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button type="button" mat-icon-button color="accent" (click)="openEditModal()" *ngIf="selectedCategory">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+</div>

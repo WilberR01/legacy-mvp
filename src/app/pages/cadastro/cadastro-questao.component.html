@@ -1,0 +1,119 @@
+<div class="form-page-wrapper">
+  <mat-card class="form-container">
+
+    <ng-container *ngIf="!wasQuestionSaved; else successScreen">
+      <mat-card-header>
+        <mat-card-title>Cadastrar Nova Questão</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+          
+          <hr>
+
+          <div class="questao-dados-base">
+            <mat-form-field appearance="outline" class="questao-tipo">
+              <mat-label>Tipo de Questão</mat-label>
+              <mat-select formControlName="type">
+                <mat-option value="1">Discursiva</mat-option>
+                <mat-option value="2">Objetiva</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="questao-dificuldade">
+              <mat-label>Dificuldade (1-5)</mat-label>
+              <input matInput type="number" formControlName="difficulty" placeholder="1" min="1" max="5">
+            </mat-form-field>
+            <app-busca-categoria formControlName="categoryId"></app-busca-categoria>
+          </div>
+
+          <hr>
+          <br>
+          <mat-form-field appearance="outline">
+            <mat-label>Descrição Resumida</mat-label>
+            <input matInput formControlName="shortDescription" placeholder="Ex: Soma de matrizes em C++">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Enunciado Completo</mat-label>
+            <textarea matInput formControlName="fullStatement" rows="5" placeholder="Digite o enunciado completo da questão aqui..."></textarea>
+          </mat-form-field>
+          
+          <ng-container *ngIf="questionForm.get('type')?.value === '1'">
+            <mat-form-field appearance="outline" class="fade-in">
+              <mat-label>Resposta Esperada</mat-label>
+              <textarea matInput formControlName="expectedAnswer" rows="5"
+                placeholder="Digite a resposta esperada para a questão discursiva..."></textarea>
+            </mat-form-field>
+          </ng-container>
+
+          <ng-container *ngIf="questionForm.get('type')?.value === '2'">
+            <div class="alternatives-section fade-in">
+              <mat-card-title>
+                Alternativas
+                <button mat-stroked-button type="button" (click)="addAlternative()" class="add-alternative-btn">
+                <mat-icon>add</mat-icon> Adicionar Alternativa
+              </button>
+              </mat-card-title>
+              <mat-radio-group formControlName="correctAlternativeIndex">
+                <div formArrayName="alternatives">
+                  <div *ngFor="let alternative of alternatives.controls; let i = index" [formGroupName]="i"
+                    class="alternative-row">
+                    <mat-form-field appearance="outline" class="alternative-input">
+                      <mat-label>Alternativa {{i + 1}}</mat-label>
+                      <input matInput formControlName="text">
+                    </mat-form-field>
+                    <div class="alternativa-opcoes">
+                      <button mat-icon-button type="button" color="warn" (click)="removeAlternative(i)" [disabled]="alternatives.length <= 1">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                      <mat-radio-button [value]="i">Correta?</mat-radio-button>
+                    </div>
+                  </div>
+                </div>
+              </mat-radio-group>
+            </div>
+            </ng-container>
+
+          <div class="actions-container">
+            <div class="file-upload">
+              <button mat-button type="button" (click)="fileInput.click()">
+                <mat-icon>attachment</mat-icon> Importar de JSON
+              </button>
+              <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept=".json">
+            </div>
+            <button mat-raised-button color="primary" type="submit" [disabled]="questionForm.invalid">Salvar Questão</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </ng-container>
+
+    <ng-template #successScreen>
+      @if (isLoading) {
+      <mat-card-content class="success-container skeleton-container">
+        <div class="skeleton skeleton-icon"></div>
+        <div class="skeleton skeleton-heading"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="success-actions">
+          <div class="skeleton skeleton-button"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+      </mat-card-content>
+      }
+      @else {
+      <mat-card-content class="success-container">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h2>Questão Salva!</h2>
+        <p>A nova questão foi cadastrada com sucesso no banco de dados.</p>
+        <div class="success-actions">
+          <button mat-stroked-button (click)="registerAnother()">
+            <mat-icon>add</mat-icon> Cadastrar Outra
+          </button>
+          <button mat-raised-button color="primary" (click)="navigateToSavedQuestion()">
+            <mat-icon>visibility</mat-icon> Ver Questão
+          </button>
+        </div>
+      </mat-card-content>
+      }
+    </ng-template>
+  </mat-card>
+</div>
+

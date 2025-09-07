@@ -1,0 +1,22 @@
+<mat-toolbar color="primary" class="navbar-container">
+  <div class="logo-container">
+    <img src="logoPNG.ico" class="logo">
+    <span class="titulo">Legacy</span>
+  </div>
+  <div class="navbar-button-group">
+    <button 
+      mat-button 
+      matIconButton [matMenuTriggerFor]="button.isLogout == true ? menu : null"
+      *ngFor="let button of visibleNavButtons" 
+      [ngClass]="{ 'login-button': button.isLogin }"
+      (click)="navigateTo(button.route)">
+      {{ button.label }}
+    </button>
+  </div>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+  </mat-menu>
+</mat-toolbar>

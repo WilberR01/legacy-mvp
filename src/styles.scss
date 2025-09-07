@@ -1,1 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; overflow: hidden; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.background-padrao {
+    background-color: #1a202c;
+}
+
+.success-snackbar,
+.error-snackbar,
+.info-snackbar {
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.success-snackbar .mat-mdc-button.mat-mdc-snack-bar-action,
+.error-snackbar .mat-mdc-button.mat-mdc-snack-bar-action,
+.info-snackbar .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.7); /* Opcional: melhora a visibilidade do botão */
+}
+
+/* Define a cor de fundo para cada tipo de snackbar */
+.success-snackbar .mdc-snackbar__surface {
+  background-color: #4CAF50 !important;
+}
+
+.error-snackbar .mdc-snackbar__surface {
+  background-color: #f44336 !important;
+}
+
+.info-snackbar .mdc-snackbar__surface {
+  background-color: #2196F3 !important;
+}
+
+/* --- Global Skeleton Styles --- */
+.skeleton {
+    background-color: #4f5b70;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite linear;
+    background-image: linear-gradient(to right, #4f5b70 0%, #606c88 20%, #4f5b70 40%, #4f5b70 100%);
+    background-repeat: no-repeat;
+    background-size: 800px 104px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+
+    100% {
+        background-position: 468px 0;
+    }
+}
+

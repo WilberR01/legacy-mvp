@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:fullstack": "concurrently \"ng serve\" \"npm start --prefix backend\""
+    "start:fullstack": "concurrently \"ng serve\" \"npm start --prefix backend\"",
+    "start:backend:debug": "npm run debug --prefix backend",
+    "start:fullstack:debug": "concurrently \"ng serve\" \"npm run debug --prefix backend\""
   },
   "private": true,
   "dependencies": {
@@ -20,7 +22,9 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "bcrypt": "^6.0.0",
     "rxjs": "~7.8.0",
+    "sqlite3": "^5.1.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

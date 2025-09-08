@@ -43,3 +43,4 @@ Thumbs.db
 
 # backend
 /backend/node_modules
+/.python

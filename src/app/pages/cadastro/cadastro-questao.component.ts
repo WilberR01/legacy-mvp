@@ -111,8 +111,24 @@ export class CadastroQuestaoComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const json = JSON.parse(e.target?.result as string);
-        this.questionForm.patchValue(json);
+        const json = JSON.parse(e.target?.result as string)[0];
+        const normalized = {
+          'shortDescription': json['Descrição resumida'] || '',
+          'fullStatement': json['Enunciado'] || '',
+          'type': json['Tipo'] === 'Discursiva' ? '1' : '2',
+          'difficulty': json['Dificuldade'] || 1,
+          'alternatives':  json['Alternativas'] ? Object.values(json['Alternativas']) : [],
+          'expectedAnswer': json['Resposta'] || ''
+        }
+        this.questionForm.patchValue(normalized);
+        if (normalized.type === '2' && normalized.expectedAnswer) {
+          this.alternatives.clear();
+          normalized.alternatives
+          .forEach(v => this.alternatives.push(this.fb.group({ text: v })));
+            const correctIndex = normalized.alternatives.indexOf(normalized.expectedAnswer);
+            console.log('Correct Index:', correctIndex);
+            this.questionForm.get('correctAlternativeIndex')?.setValue(correctIndex !== -1 ? correctIndex : null);
+          }
         this.snackbarService.showSuccess('Questão importada do JSON com sucesso!');
       } catch (error) {
         this.snackbarService.showError('Arquivo JSON inválido.');
@@ -181,4 +197,3 @@ export class CadastroQuestaoComponent implements OnInit {
     this.savedQuestionId = null;
   }
 }
-

@@ -105,21 +105,46 @@ export class CadastroQuestaoComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      try {
-        const json = JSON.parse(e.target?.result as string);
-        this.questionForm.patchValue(json);
-        this.snackbarService.showSuccess('Questão importada do JSON com sucesso!');
-      } catch (error) {
-        this.snackbarService.showError('Arquivo JSON inválido.');
-      }
+        try {
+            const json = JSON.parse(e.target?.result as string);
+            if (!Array.isArray(json)) {
+                this.snackbarService.showError('O arquivo deve conter uma lista de questões.');
+                return;
+            }
+            // Validação básica de cada questão
+            const invalids = json.filter(q =>
+                !q.shortDescription || !q.fullStatement || !q.type || !q.difficulty
+            );
+            if (invalids.length > 0) {
+                this.snackbarService.showError('Uma ou mais questões estão inválidas no JSON.');
+                return;
+            }
+            this.bulkRegisterQuestions(json);
+        } catch (error) {
+            this.snackbarService.showError('Arquivo JSON inválido.');
+        }
     };
     reader.readAsText(file);
-  }
+}
+
+bulkRegisterQuestions(questions: Question[]): void {
+    this.isLoading = true;
+    this.questionService.createQuestionsBulk(questions).subscribe({
+        next: (response) => {
+            this.snackbarService.showSuccess(`${response.saved} questões salvas com sucesso!`);
+            this.wasQuestionSaved = true;
+            this.savedQuestionId = null;
+            setTimeout(() => { this.isLoading = false; }, 500);
+        },
+        error: (err) => {
+            this.snackbarService.showError(err.error.message || 'Erro ao salvar questões.');
+            this.isLoading = false;
+        }
+    });
+}
 
   onSubmit(): void {
     if (this.questionForm.invalid) {

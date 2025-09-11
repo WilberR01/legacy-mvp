@@ -1,8 +1,11 @@
 const db = require('./database');
 
-function createQuestion(questionData, callback) {
-    db.serialize(() => {
-        db.run('BEGIN TRANSACTION');
+function createQuestion(questionData, callback, skipTransaction = false) {
+    const runInTransaction = !skipTransaction;
+    const runDb = runInTransaction ? db.serialize.bind(db) : (fn) => fn();
+
+    runDb(() => {
+        if (runInTransaction) db.run('BEGIN TRANSACTION');
 
         const questionSql = `
             INSERT INTO Questao (DescricaoResumida, Enunciado, Dificuldade, Tipo, CategoriaID, AutorID) 
@@ -20,7 +23,7 @@ function createQuestion(questionData, callback) {
 
         db.run(questionSql, questionParams, function(err) {
             if (err) {
-                db.run('ROLLBACK');
+                if (runInTransaction) db.run('ROLLBACK');
                 return callback(err);
             }
 
@@ -37,7 +40,7 @@ function createQuestion(questionData, callback) {
                     stmt.run(questionId, alt.text, isCorrect, (altErr) => {
                         if (altErr && !errorOccurred) {
                             errorOccurred = true;
-                            db.run('ROLLBACK');
+                            if (runInTransaction) db.run('ROLLBACK');
                             callback(altErr);
                         }
                     });
@@ -45,11 +48,11 @@ function createQuestion(questionData, callback) {
 
                 stmt.finalize((finalizeErr) => {
                     if (finalizeErr && !errorOccurred) {
-                        db.run('ROLLBACK');
+                        if (runInTransaction) db.run('ROLLBACK');
                         return callback(finalizeErr);
                     }
                     if (!errorOccurred) {
-                        db.run('COMMIT');
+                        if (runInTransaction) db.run('COMMIT');
                         callback(null, { id: questionId });
                     }
                 });
@@ -58,18 +61,47 @@ function createQuestion(questionData, callback) {
                 const subjectiveSql = `INSERT INTO SubjetivaQuestao (QuestaoID, RespostaEsperada) VALUES (?, ?)`;
                 db.run(subjectiveSql, [questionId, questionData.expectedAnswer], (subErr) => {
                     if (subErr) {
-                        db.run('ROLLBACK');
+                        if (runInTransaction) db.run('ROLLBACK');
                         return callback(subErr);
                     }
-                    db.run('COMMIT');
+                    if (runInTransaction) db.run('COMMIT');
                     callback(null, { id: questionId });
                 });
             } else {
-                db.run('ROLLBACK');
+                if (runInTransaction) db.run('ROLLBACK');
                 callback(new Error("Tipo de questão inválido."));
             }
         });
     });
 }
 
-module.exports = { createQuestion };
+function createQuestionsBulk(questions, callback) {
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+        let saved = 0;
+        let errorOccurred = false;
+
+        function saveNext(index) {
+            if (errorOccurred || index >= questions.length) {
+                if (!errorOccurred) {
+                    db.run('COMMIT');
+                    callback(null, { saved });
+                }
+                return;
+            }
+            createQuestion(questions[index], (err) => {
+                if (err) {
+                    errorOccurred = true;
+                    db.run('ROLLBACK');
+                    callback(err);
+                } else {
+                    saved++;
+                    saveNext(index + 1);
+                }
+            }, true); // <--- skipTransaction = true
+        }
+        saveNext(0);
+    });
+}
+
+module.exports = { createQuestion, createQuestionsBulk };

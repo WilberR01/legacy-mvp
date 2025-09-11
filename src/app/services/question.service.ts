@@ -15,6 +15,10 @@ export class QuestionService {
         return this.http.post(`${this.apiUrl}/questions`, question);
     }
 
+    createQuestionsBulk(questions: Question[]): Observable<any> {debugger;
+        return this.http.post(`${this.apiUrl}/questions/bulk`, questions);
+    }
+
     deleteQuestion(id: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/questions/${id}`);
     }

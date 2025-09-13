@@ -114,7 +114,6 @@ export class CadastroQuestaoComponent implements OnInit {
                 this.snackbarService.showError('O arquivo deve conter uma lista de questões.');
                 return;
             }
-            // Validação básica de cada questão
             const invalids = json.filter(q =>
                 !q.shortDescription || !q.fullStatement || !q.type || !q.difficulty
             );

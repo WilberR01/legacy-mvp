@@ -1,0 +1,52 @@
+<mat-panel-title>
+    <mat-icon>build</mat-icon>
+    Montar Avaliação (Busca Dinâmica)
+</mat-panel-title>
+
+<form [formGroup]="dynamicSearchForm" (ngSubmit)="onSubmit()" class="dynamic-search-form">
+    <div class="form-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Quantidade de Questões</mat-label>
+            <input matInput type="number" formControlName="quantity">
+        </mat-form-field>
+    </div>
+
+    <div class="form-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Categorias</mat-label>
+            <mat-select formControlName="categories" multiple>
+                <mat-option *ngFor="let category of allCategories" [value]="category.id">{{category.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Tipos de Questão</mat-label>
+            <mat-select formControlName="types" multiple>
+                <mat-option *ngFor="let type of questionTypes" [value]="type.id">{{type.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="slider-group">
+        <mat-label>Dificuldade (Mín - Máx)</mat-label>
+        <mat-slider min="1" max="5" step="1" discrete>
+            <input matSliderStartThumb formControlName="minDifficulty">
+            <input matSliderEndThumb formControlName="maxDifficulty">
+        </mat-slider>
+    </div>
+
+    <div class="slider-group">
+        <mat-label>Reputação (Mín - Máx)</mat-label>
+        <mat-slider min="0" max="5" step="1" discrete>
+            <input matSliderStartThumb formControlName="minReputation">
+            <input matSliderEndThumb formControlName="maxReputation">
+        </mat-slider>
+    </div>
+
+    <mat-card-actions align="end">
+        <button mat-raised-button color="primary" type="submit" [disabled]="dynamicSearchForm.invalid">
+            <mat-icon>shuffle</mat-icon>
+            Gerar Avaliação
+        </button>
+    </mat-card-actions>
+</form>

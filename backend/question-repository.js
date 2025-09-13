@@ -98,10 +98,100 @@ function createQuestionsBulk(questions, callback) {
                     saved++;
                     saveNext(index + 1);
                 }
-            }, true); // <--- skipTransaction = true
+            }, true); 
         }
         saveNext(0);
     });
 }
 
-module.exports = { createQuestion, createQuestionsBulk };
+function searchQuestions(params, callback) {
+    let sql = `
+        SELECT
+            q.QuestaoID as id,
+            q.DescricaoResumida as shortDescription,
+            q.Enunciado as fullStatement,
+            q.Reputacao as reputation,
+            q.Dificuldade as difficulty,
+            q.Tipo as type,
+            c.Nome as categoryName,
+            u.Nome as authorName
+        FROM Questao q
+        LEFT JOIN Categoria c ON q.CategoriaID = c.CategoriaID
+        LEFT JOIN Usuario u ON q.AutorID = u.UsuarioID
+        WHERE 1=1
+    `;
+    const queryParams = [];
+
+    if (params.text) {
+        sql += ` AND (q.DescricaoResumida LIKE ? OR q.Enunciado LIKE ?)`;
+        queryParams.push(`%${params.text}%`);
+        queryParams.push(`%${params.text}%`);
+    }
+
+    if (params.categoryId) {
+        sql += ` AND q.CategoriaID = ?`;
+        queryParams.push(params.categoryId);
+    }
+
+    if (params.reputation && parseInt(params.reputation, 10) > 0) {
+        sql += ` AND q.Reputacao >= ?`;
+        queryParams.push(params.reputation);
+    }
+
+    sql += ` ORDER BY q.DataCriacao DESC`;
+
+    db.all(sql, queryParams, (err, rows) => {
+        callback(err, rows);
+    });
+}
+
+function dynamicSearch(params, callback) {
+    let sql = `
+        SELECT
+            q.QuestaoID as id,
+            q.DescricaoResumida as shortDescription,
+            q.Enunciado as fullStatement,
+            q.Reputacao as reputation,
+            q.Dificuldade as difficulty,
+            q.Tipo as type,
+            c.Nome as categoryName,
+            u.Nome as authorName
+        FROM Questao q
+        LEFT JOIN Categoria c ON q.CategoriaID = c.CategoriaID
+        LEFT JOIN Usuario u ON q.AutorID = u.UsuarioID
+        WHERE 1=1
+    `;
+    const queryParams = [];
+
+    if (params.categories && params.categories.length > 0) {
+        sql += ` AND q.CategoriaID IN (${params.categories.map(() => '?').join(',')})`;
+        queryParams.push(...params.categories);
+    }
+
+    if (params.types && params.types.length > 0) {
+        sql += ` AND q.Tipo IN (${params.types.map(() => '?').join(',')})`;
+        queryParams.push(...params.types);
+    }
+    
+    sql += ` AND q.Dificuldade BETWEEN ? AND ?`;
+    queryParams.push(params.minDifficulty, params.maxDifficulty);
+
+    sql += ` AND q.Reputacao BETWEEN ? AND ?`;
+    queryParams.push(params.minReputation, params.maxReputation);
+
+    sql += ` ORDER BY RANDOM() LIMIT ?`;
+    queryParams.push(params.quantity);
+
+    db.all(sql, queryParams, (err, rows) => {
+        callback(err, rows);
+    });
+}
+
+
+module.exports = { 
+    createQuestion, 
+    createQuestionsBulk, 
+    searchQuestions, 
+    dynamicSearch 
+};
+

@@ -10,8 +10,13 @@ export interface Question {
     expectedAnswer?: string;
     alternatives?: Alternative[];
     correctAlternativeIndex?: number | null;
-    authorId?: number;      // Futuramente, virá do token do usuário
-    categoryId?: number;    // Futuramente, virá de um seletor de categoria
+    authorId?: number;
+    categoryId?: number;
+
+    id?: number;
+    reputation?: number;
+    categoryName?: string;
+    authorName?: string;
 }
 
 export interface Category {

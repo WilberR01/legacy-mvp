@@ -1,0 +1,25 @@
+<mat-card class="filters-container">
+  <mat-card-header>
+    <mat-card-title>Filtros de Busca</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="searchForm" class="filters-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar por texto</mat-label>
+        <input matInput formControlName="text" placeholder="Ex: Ponteiros em C++">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <app-busca-categoria formControlName="categoryId"></app-busca-categoria>
+
+      <mat-label class="slider-label">Reputação Mínima</mat-label>
+      <mat-slider min="0" max="5" step="1" discrete [displayWith]="formatLabel">
+        <input matSliderThumb formControlName="reputation">
+      </mat-slider>
+    </form>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button (click)="clearFilters()">Limpar Filtros</button>
+  </mat-card-actions>
+</mat-card>
+    

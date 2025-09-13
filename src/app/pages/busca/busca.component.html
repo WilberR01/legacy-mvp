@@ -1,1 +1,50 @@
-<p>busca works!</p>
+<div class="busca-page-container">
+  <mat-card class="filtros-container">
+    <mat-card-content>
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Busca Convencional">
+          <app-filtros-busca (search)="onSearch($event)"></app-filtros-busca>
+        </mat-tab>
+        <mat-tab label="Montar Avaliação">
+            <div class="container-dinamica">
+                <app-busca-dinamica (dynamicSearch)="onDynamicSearch($event)"></app-busca-dinamica>
+            </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="resultados-container">
+    @if (isLoading) {
+      <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Buscando questões...</p>
+      </div>
+    } @else {
+      @if ((questions$ | async); as questions) {
+        @if (questions.length > 0) {
+          <div class="results-list">
+            @for (question of questions; track question.id) {
+              <app-item-busca [question]="question"></app-item-busca>
+            }
+          </div>
+        } @else {
+            @if (searchPerformed) {
+              <div class="no-results-container">
+                <mat-icon>search_off</mat-icon>
+                <h2>Nenhuma questão encontrada</h2>
+                <p>Tente ajustar seus filtros de busca.</p>
+              </div>
+            } @else {
+                <div class="no-results-container">
+                    <mat-icon>manage_search</mat-icon>
+                    <h2>Pronto para buscar?</h2>
+                    <p>Utilize os filtros ao lado para encontrar questões ou montar uma avaliação.</p>
+                </div>
+            }
+        }
+      }
+    }
+  </div>
+</div>
+

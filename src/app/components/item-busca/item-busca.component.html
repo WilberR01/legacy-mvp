@@ -1,1 +1,35 @@
-<p>item-busca works!</p>
+<mat-card class="question-card">
+  <mat-card-header>
+    <mat-card-title>{{ question.shortDescription }}</mat-card-title>
+    <mat-card-subtitle>{{ question.categoryName }} | Criado por: {{ question.authorName || 'Desconhecido' }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p class="enunciado">{{ question.fullStatement }}</p>
+  </mat-card-content>
+  <mat-card-actions class="card-footer">
+    <div class="info-tags">
+      <mat-chip-set>
+        <mat-chip [ngClass]="question.type === 1 ? 'discursiva' : 'objetiva'">
+          {{ question.type === 1 ? 'Discursiva' : 'Objetiva' }}
+        </mat-chip>
+      </mat-chip-set>
+      <div class="difficulty-rating">
+        <strong>Dificuldade:</strong>
+        <mat-icon *ngFor="let _ of getDifficultyStars()" class="star-filled">star</mat-icon>
+        <mat-icon *ngFor="let _ of getEmptyStars()" class="star-empty">star_border</mat-icon>
+      </div>
+    </div>
+    <div class="actions-buttons">
+        <button mat-icon-button color="primary" matTooltip="Adicionar à avaliação">
+            <mat-icon>add_task</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" matTooltip="Editar questão">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Excluir questão">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+  </mat-card-actions>
+</mat-card>
+

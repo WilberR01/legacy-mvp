@@ -1,0 +1,37 @@
+.dynamic-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+mat-form-field {
+  flex: 1;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+    color: rgb(0, 0, 0);
+}
+
+mat-icon {
+    margin-right: 8px;
+}
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 15px;
+    border: 1px solid rgb(177, 177, 177);
+    border-radius: 10px;
+}
+
+.slider-group mat-label {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.7);
+}

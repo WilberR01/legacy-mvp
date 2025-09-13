@@ -39,4 +39,31 @@ router.post('/questions/bulk', (req, res) => {
     });
 });
 
+router.get('/questions/search', (req, res) => {
+    // Extrai os parâmetros da URL (ex: ?text=teste&categoryId=1)
+    const { text, categoryId, reputation } = req.query;
+    const params = { text, categoryId, reputation };
+
+    questionRepository.searchQuestions(params, (err, questions) => {
+        if (err) {
+            console.error('Erro ao buscar questões:', err.message);
+            return res.status(500).json({ message: 'Erro interno ao buscar questões.' });
+        }
+        res.status(200).json(questions);
+    });
+});
+
+// Rota para a busca dinâmica (montar avaliação)
+router.post('/questions/dynamic-search', (req, res) => {
+    // Extrai os parâmetros do corpo da requisição POST
+    const params = req.body;
+    questionRepository.dynamicSearch(params, (err, questions) => {
+        if (err) {
+            console.error('Erro na busca dinâmica:', err.message);
+            return res.status(500).json({ message: 'Erro interno na busca dinâmica.' });
+        }
+        res.status(200).json(questions);
+    });
+});
+
 module.exports = router;
